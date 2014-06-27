@@ -3,7 +3,7 @@ Robert Oliveira <olivecoder@gmail.com>
 
 
 HOW TO ADD TO YOUR PROJECT
-git clone git://development/u/roliveira/mamba-init init && rm !$/.git
+git clone git://development/u/robert/mamba-init init && rm -rf init/.git
 
 
 HOW TO INSTALL THE INIT SCRIPT
