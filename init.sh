@@ -34,7 +34,7 @@ log_action_msg() {
 [ -f /lib/lsb/init-functions ] && . /lib/lsb/init-functions
 
 get_virtualenv() {
-    ACTIVATE=$(find $WORKDIR -name "*env" -type d -exec \
+    ACTIVATE=$(find -L $WORKDIR -name "*env" -type d -exec \
                find {}/bin -name activate \;)
     if [ "$ACTIVATE" = "" ]; then 
 	echo ERROR: virtualenv not found
