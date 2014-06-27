@@ -33,11 +33,15 @@ log_action_msg() {
 [ -f /etc/init.d/functions ] && . /etc/init.d/functions
 [ -f /lib/lsb/init-functions ] && . /lib/lsb/init-functions
 
-
 get_virtualenv() {
-    find $WORKDIR -name "*env" -type d -exec \
-        find {}/bin -name activate \;
+    ACTIVATE=$(find $WORKDIR -name "*env" -type d -exec \
+               find {}/bin -name activate \;)
+    if [ "$ACTIVATE" = "" ]; then 
+	echo ERROR: virtualenv not found
+	exit 1
+    fi
 }
+
 
 user_shell() {
     if [ $(id -u) -eq 0 ]; then
@@ -48,9 +52,10 @@ user_shell() {
 }
 
 mamba_admin_exec() {
+    get_virtualenv
     user_shell << EOF
         cd $WORKDIR
-        . $(get_virtualenv)
+        . $ACTIVATE
         $CMD $*
 EOF
 }
