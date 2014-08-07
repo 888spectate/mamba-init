@@ -84,7 +84,7 @@ case "$1" in
         do_start
         ;;
     *)
-        log_action_msg "Usage: %0 {start|stop|restart}"
+        log_action_msg "Usage: $0 {start|stop|restart}"
         exit 2
         ;;
 esac
