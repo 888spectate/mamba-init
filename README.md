@@ -1,24 +1,18 @@
 mamba-init
 ==========
-nit script for mamba applications
+Linux init script for mamba applications
 
 
-HOW TO ADD TO YOUR PROJECT
-==========================
-git clone git://development/u/robert/mamba-init init && rm -rf init/.git
+How to add to your project
+--------------------------
+> git clone git://development/u/robert/mamba-init init && rm -rf init/.git
 
 
-HOW TO INSTALL THE INIT SCRIPT
-==============================
-sudo init/install.sh
+How to install the init script
+------------------------------
+> sudo init/install.sh
 
 
-HOW TO CHANGE THE USER TO RUN AS
-================================
-sudo vi /etc/defaults/<mamba-application-name>
-
-
-HOW TO SET TO START ON BOOT
-===========================
-sudo update-rc.d <<mamba-application-name> defaults
-
+How to change the running user
+------------------------------
+> sudo vi /etc/defaults/<mamba-application-name>
