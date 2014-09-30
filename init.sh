@@ -33,27 +33,27 @@ log_action_msg() {
 [ -f /etc/init.d/functions ] && . /etc/init.d/functions
 [ -f /lib/lsb/init-functions ] && . /lib/lsb/init-functions
 
-get_virtualenv() {
-    ACTIVATE=$(find -L $WORKDIR -name "*env" -type d -exec \
-               find {}/bin -name activate \;)
-    if [ "$ACTIVATE" = "" ]; then 
-	echo ERROR: virtualenv not found
-	exit 1
-    fi
+find_first_env() {
+    VENV_DIR=$1
+    find -L $VENV_DIR -name '*env' -type d -executable \
+	-exec find {}/bin -name activate \; \
+	-quit 2>/dev/null
 }
 
-
-user_shell() {
-    if [ $(id -u) -eq 0 ]; then
-        su $RUN_AS -c sh
-    else
-        sh
+get_virtualenv() {
+    ACTIVATE=$(find_first_env "$WORKDIR")
+    if [ "$ACTIVATE" = "" ]; then
+	ACTIVATE=$(find_first_env $(dirname(WORKDIR)))
+	if [ "$ACTIVATE" = "" ]; then
+	    echo ERROR: virtualenv not found
+	    exit 1
+	fi
     fi
 }
 
 mamba_admin_exec() {
     get_virtualenv
-    user_shell << EOF
+    sudo -u $RUN_AS sh << EOF
         cd $WORKDIR
         . $ACTIVATE
         $CMD $*
@@ -67,6 +67,7 @@ do_start() {
 do_stop() {
     mamba_admin_exec stop
     [ -f "$PIDFILE" ] && rm $PIDFILE
+    find "$WORKDIR" -name '*.pyc' -exec rm {} \;
 }
 
 case "$1" in
