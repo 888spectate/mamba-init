@@ -1,34 +1,24 @@
-Scripts to start a mamba appliction on system boot
-Robert Oliveira <olivecoder@gmail.com>
+mamba-init
+==========
+nit script for mamba applications
 
 
 HOW TO ADD TO YOUR PROJECT
+==========================
 git clone git://development/u/robert/mamba-init init && rm -rf init/.git
 
 
 HOW TO INSTALL THE INIT SCRIPT
+==============================
 sudo init/install.sh
 
 
-HOW TO CHANGE THE MAMBA APPLICATION USER TO RUN AS
+HOW TO CHANGE THE USER TO RUN AS
+================================
 sudo vi /etc/defaults/<mamba-application-name>
 
 
 HOW TO SET TO START ON BOOT
-sudo chkconfig <mamba-application-name> on
+===========================
+sudo update-rc.d <<mamba-application-name> defaults
 
-
-HOW TO START/STOP/RESTART AS NORMAL USER
-/etc/init.d/<mamba-application-name> start
-/etc/init.d/<mamba-application-name> stop
-/etc/init.d/<mamba-application-name> restart
-
-
-HOW TO START/STOP/RESTART AS ROOT 
-sudo service <mamba-application-name> start
-sudo service <mamba-application-name> stop
-sudo service <mamba-application-name> restart
--- or --
-sudo /etc/init.d/<mamba-application-name> start
-sudo /etc/init.d/<mamba-application-name> stop
-sudo /etc/init.d/<mamba-application-name> restart
