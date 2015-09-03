@@ -39,6 +39,7 @@ get_virtualenv() {
         find -L $path_list -iname '*env' -o -iname '*environment' -type d -executable \
              -exec find {}/bin -name activate \; -quit
     )
+    [ -n "$activate_cmd" ] || die Python virtual environment not found
     export VIRTUAL_ENV=$(dirname $(dirname $activate_cmd))
     [ -n $VIRTUAL_ENV ]
 }
