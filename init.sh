@@ -25,10 +25,8 @@ LOCKDIR=/var/lock/dedsert
 exec > >(tee >(logger -t $APPNAME))
 exec 2> >(tee >(logger -t $APPNAME -p user.err) >&2)
 
-# imports
+# local settings
 [ -f /etc/default/$APPNAME ] && source /etc/default/$APPNAME
-# [ -f /etc/init.d/functions ] && . /etc/init.d/functions
-# [ -f /lib/lsb/init-functions ] && . /lib/lsb/init-functions
 
 die() {
     echo $@ >&2
