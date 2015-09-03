@@ -36,7 +36,7 @@ die() {
 }
 
 get_virtualenv() {
-    path_list="$WORKDIR $WORKDIR/.."
+    path_list="$WORKDIR $WORKDIR/.. $HOME"
     activate_cmd=$(
         find -L $path_list -iname '*env' -o -iname '*environment' -type d -executable \
              -exec find {}/bin -name activate \; -quit
