@@ -89,7 +89,7 @@ do_start() {
     opts="-d $WORKDIR --prefix=$APPNAME --pidfile=$PIDFILE \
           --syslog --prefix=$APPNAME -u $uid -g $gid $OPTS --umask 0022"
     cd $WORKDIR
-    $VIRTUAL_ENV/bin/twistd $opts $APPNAME ||
+    $VIRTUAL_ENV/bin/twistd $opts $APPNAME $APP_OPTS ||
         die Error: Check the application log
     sleep 3
     is_running || die Failed to start. Unknown reason.
