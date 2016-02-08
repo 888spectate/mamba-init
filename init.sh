@@ -104,7 +104,7 @@ do_stop() {
     fi
     echo Stopping...
     kill $(cat $PIDFILE) || return 1
-    sleep 3
+    sleep 10
     is_running && die Failed to stop! try $0 kill
     echo Stopped successfully
     return 0
