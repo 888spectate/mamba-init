@@ -120,12 +120,12 @@ do_stop() {
 
 do_status() {
     if [ is_running ] ; then
-           echo "$APPNAME is alive"
+        # TODO: check that it's actually working (/ping?)
+        echo "$APPNAME is alive"
+        return 0
+    else
+        return 1
     fi
-
-    # TODO: check that it's actually working (/ping?)
-
-    return 0
 }
 
 # this should run as su at least once to create the directories below
