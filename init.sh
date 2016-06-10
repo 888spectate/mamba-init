@@ -12,6 +12,7 @@
 #                    in the same directory structure as the init script.
 ### END INIT INFO
 
+# TODO: switch between dedsert & vagrant as needed in each env
 RUN_AS=dedsert
 APPNAME=$(basename $0)
 WORKDIR=$(dirname $(dirname $(readlink -e $0)))
@@ -46,18 +47,20 @@ get_virtualenv() {
 is_running() {
     [ -f $PIDFILE ] || return 1
     [ -r $PIDFILE ] || die Cannot read $PIDFILE
-    ps $(cat $PIDFILE) &>/dev/null
+    ps $(cat $PIDFILE) | grep -q "${APPNAME}" &>/dev/null
 }
 
 create_dir() {
-    sudo mkdir -p $1 || die Needs to run as SU the first time to create dirs
+    sudo mkdir -p $1 || die Needs to run as root the first time to create dirs
+    # TODO: switch between dedsert & vagrant as needed in each env
     sudo chown dedsert:dedsert $1 || die
     sudo chmod g+wxs $1 || die
 }
 
 init_lock() {
     [ -d $LOCKDIR ] || create_dir $LOCKDIR
-    LOCK=$LOCKDIR/$APPNAME
+    LOCK="$LOCKDIR/$APPNAME"
+    # TODO: get rid of lockfile
     if ! lockfile -r 0 $LOCK &>/dev/null; then
        [ -f $LOCK ] && die Already running || die Cannot write to $LOCK
     fi
@@ -102,22 +105,31 @@ do_stop() {
         echo Not running
         return 0
     fi
-    echo Stopping...
-    kill $(cat $PIDFILE) || return 1
+    echo -n "Stopping... "
+    kill $(cat $PIDFILE)
     sleep 10
-    is_running && die Failed to stop! try $0 kill
-    echo Stopped successfully
-    return 0
+    if is_running ; then
+        echo "Failed to stop! killing it"
+        kill -9 $(cat $PIDFILE)
+        sleep 3
+    fi
+    if is_running ; then
+           die "Failed to kill!"
+    else
+           echo Stopped successfully
+           exit 0
+    fi
 }
 
-do_forcestop() {
-    do_stop && return 0
-    echo Failed to stop. Sending SIGKILL...
-    kill -9 $(cat $PIDFILE) || die
-    sleep 3
-    is_running ||
-        (echo Stopped successfully | exit 0) &&
-        die Failed to kill!
+do_status() {
+    if is_running ; then
+        # TODO: check that it's actually working (/ping?)
+        echo "$APPNAME is alive"
+        return 0
+    else
+        echo "$APPNAME is not running"
+        return 1
+    fi
 }
 
 # this should run as su at least once to create the directories below
@@ -144,15 +156,15 @@ case "$1" in
     stop)
         do_stop
         ;;
-    forcestop)
-        do_forcestop
-        ;;
     restart)
         do_stop
         do_start
         ;;
+    status)
+        do_status
+        ;;
     *)
-        die "Usage: $0 {start|stop|forcestop|restart}"
+        die "Usage: $0 {start|stop|restart|status}"
         ;;
 esac
 
