@@ -105,25 +105,29 @@ do_stop() {
         echo Not running
         return 0
     fi
-    echo Stopping...
+    echo -n "Stopping... "
     kill $(cat $PIDFILE)
     sleep 10
-    if [ is_running ] ; then
+    if is_running ; then
         echo "Failed to stop! killing it"
         kill -9 $(cat $PIDFILE)
         sleep 3
     fi
-    is_running ||
-           (echo Stopped successfully | exit 0) &&
+    if is_running ; then
            die "Failed to kill!"
+    else
+           echo Stopped successfully
+           exit 0
+    fi
 }
 
 do_status() {
-    if [ is_running ] ; then
+    if is_running ; then
         # TODO: check that it's actually working (/ping?)
         echo "$APPNAME is alive"
         return 0
     else
+        echo "$APPNAME is not running"
         return 1
     fi
 }
