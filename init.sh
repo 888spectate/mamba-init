@@ -35,11 +35,8 @@ die() {
 }
 
 get_virtualenv() {
-    path_list="$WORKDIR $WORKDIR/.. $HOME"
-    activate_cmd=$(
-        find -L $path_list -wholename '*bin/activate' | head -1
-    )
-    [ -n "$activate_cmd" ] || die Python virtual environment not found
+    activate_cmd="$HOME/dedsert_environment/bin/activate"
+    [ -e "$activate_cmd" ] || die Python virtual environment not found
     export VIRTUAL_ENV=$(dirname $(dirname $activate_cmd))
     [ -n $VIRTUAL_ENV ]
 }
