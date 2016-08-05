@@ -104,11 +104,14 @@ do_stop() {
     fi
     echo -n "Stopping... "
     kill $(cat $PIDFILE)
-    sleep 10
+    sleep 1
     if is_running ; then
-        echo "Failed to stop! killing it"
-        kill -9 $(cat $PIDFILE)
-        sleep 3
+        sleep 10
+        if is_running ; then
+            echo "Failed to stop! killing it"
+            kill -9 $(cat $PIDFILE)
+            sleep 3
+        fi
     fi
     if is_running ; then
            die "Failed to kill!"
