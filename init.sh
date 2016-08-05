@@ -94,7 +94,7 @@ do_start() {
     sleep 3
     is_running || die Failed to start. Unknown reason.
     echo Started successfuly
-    exit 0
+    return 0
 }
 
 do_stop() {
@@ -114,6 +114,7 @@ do_stop() {
            die "Failed to kill!"
     else
            echo Stopped successfully
+           return 0
     fi
 }
 
@@ -164,4 +165,3 @@ case "$1" in
         ;;
 esac
 
-exit 0
