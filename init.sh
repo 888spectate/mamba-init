@@ -114,7 +114,6 @@ do_stop() {
            die "Failed to kill!"
     else
            echo Stopped successfully
-           exit 0
     fi
 }
 
