@@ -12,6 +12,13 @@ CONFIG=$SCRIPTSDIR/../config/application.json
 APPNAME=$(get_mamba_app_name)
 DEFAULT=/etc/default/$APPNAME
 WORKDIR=$SCRIPTSDIR/..
+RUN_AS=dedsert
+LOCKDIR=/var/lock/$RUN_AS
+PIDDIR=/var/run/$RUN_AS
+
+# this should run as su at least once to create the directories below
+[ -d $LOCKDIR ] || create_dir $LOCKDIR
+[ -d $PIDDIR ] || create_dir $PIDDIR
 
 die() {
     echo ERROR: $@ >&2
